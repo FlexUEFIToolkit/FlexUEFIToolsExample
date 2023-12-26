@@ -59,6 +59,14 @@ int main()
 
     /* Read message from kernel */
     recvmsg(sock_fd, &msg, 0);
+    char *content = (char *)NLMSG_DATA(nlh);
+    printf("content size: %ld\n",strlen(content));
+    for(int i = 1; i <= strlen(content); i++){
+		printf("%02X ",content[i-1]);					
+		if(i % 16 == 0){
+			printf("\n");
+		}
+	}
     printf("Received message payload: %s\n", (char *)NLMSG_DATA(nlh));
     close(sock_fd);
 }

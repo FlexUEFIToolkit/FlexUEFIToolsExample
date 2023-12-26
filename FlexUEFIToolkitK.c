@@ -37,9 +37,9 @@ static void receive_message(struct sk_buff *skb) {
     }
 
     struct sk_buff *skb_out;
-    int msg_size = strnlen(message, MSG_SIZE);
+    // int msg_size = strnlen(message, MSG_SIZE);
 
-    skb_out = nlmsg_new(msg_size, 0);
+    skb_out = nlmsg_new(MSG_SIZE, 0);
     if (!skb_out) {
         pr_alert("%s : failed to allocate new skb.\n",__func__);
         return;
@@ -48,7 +48,7 @@ static void receive_message(struct sk_buff *skb) {
     NETLINK_CB(skb_out).dst_group = 0;
     NETLINK_CB(skb_out).portid = pid;
 
-    nlh = nlmsg_put(skb_out, pid, 0, NLMSG_DONE, msg_size, 0);
+    nlh = nlmsg_put(skb_out, pid, 0, NLMSG_DONE, MSG_SIZE, 0);
 
 
     UEFIStringLower(message, nlmsg_data(nlh));

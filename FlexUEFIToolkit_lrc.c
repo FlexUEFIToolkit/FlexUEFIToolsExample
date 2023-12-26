@@ -15,15 +15,6 @@ struct iovec iov;
 int sock_fd;
 struct msghdr msg;
 
-typedef enum {
-    futNonOp            = 0,
-    futToLowerCase      = 1,
-    futReadFlash         =2,
-    futChangeBIOS	= 3,
-    futFuncNum
-
-} FLEX_UEFI_TOOKLIT_FUNC_TYPE;
-
 int main()
 {
     sock_fd = socket(PF_NETLINK, SOCK_RAW, FLEX_UEFI_TOOLKIT_NETLINK_ID);
@@ -68,6 +59,6 @@ int main()
 
     /* Read message from kernel */
     recvmsg(sock_fd, &msg, 0);
-    printf("Received message payload: %s\n", NLMSG_DATA(nlh));
+    printf("Received message payload: %s\n", (char *)NLMSG_DATA(nlh));
     close(sock_fd);
 }

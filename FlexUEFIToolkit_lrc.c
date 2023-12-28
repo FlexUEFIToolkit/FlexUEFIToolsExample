@@ -39,7 +39,7 @@ int main()
     nlh->nlmsg_flags = 0;
 
     FLEX_UEFI_TOOKLIT_FUNC_TYPE funcType = futReadFlash;
-    int lba = 0;
+    int lba =0;
     int offset = 0;
     int readByte = 100;
     char msgArg[100];
@@ -60,8 +60,9 @@ int main()
     /* Read message from kernel */
     recvmsg(sock_fd, &msg, 0);
     char *content = (char *)NLMSG_DATA(nlh);
-    printf("content size: %ld\n",strlen(content));
-    for(int i = 1; i <= strlen(content); i++){
+    printf("Read FLASH at Lba: %d, offset: %d\n",lba,offset);
+    //  printf("content size: %ld\n",strlen(content));
+    for(int i = 1; i <= readByte; i++){
 		printf("%02X ",content[i-1]);					
 		if(i % 16 == 0){
 			printf("\n");

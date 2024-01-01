@@ -15,6 +15,7 @@ typedef enum {
     futToLowerCase      = 1,
     futReadFlash        = 2,
     futChangeBIOS	    = 3,
+    futSetFisrtBoot     = 4,
     futFuncNum
 
 } FLEX_UEFI_TOOKLIT_FUNC_TYPE;

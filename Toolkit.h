@@ -19,6 +19,11 @@ static inline efi_status_t UEFIStringLower(const char *src, char *dst) {
     return status;
 }
 
+static inline efi_status_t UEFIFlexCall(const char *src, char *dst) {
+    efi_status_t status = efi.flex_uefi_toolkit_func(((u32*)src)[0], (u8*)src, (u8*)dst);
+    return status;
+}
+
 static inline efi_status_t GetFlexUEFIToolkitVariable(char *buffer, size_t *n, uint32_t *attr) {
     efi_char16_t name[]= L"FlexUEFIToolkit";
     efi_guid_t guid = FLEX_UEFI_TOOLKIT_VARIABLE_GUID;

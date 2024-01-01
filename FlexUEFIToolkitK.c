@@ -11,7 +11,7 @@
 MODULE_LICENSE("MIT License");
 MODULE_AUTHOR("ColorsWind");
 
-#define MSG_SIZE 1024
+#define MSG_SIZE 1052
 struct sock *netlink_socket = NULL;
 static char message[MSG_SIZE];
 
@@ -27,7 +27,7 @@ static void receive_message(struct sk_buff *skb) {
         return;
     }
 
-    strncpy(message, NLMSG_DATA(nlh), MSG_SIZE);
+    memcpy(message, NLMSG_DATA(nlh), MSG_SIZE);
     pid = nlh->nlmsg_pid;
     pr_debug("%s : kernel message receive: %s.\n",__func__, message);
 
@@ -51,7 +51,8 @@ static void receive_message(struct sk_buff *skb) {
     nlh = nlmsg_put(skb_out, pid, 0, NLMSG_DONE, MSG_SIZE, 0);
 
 
-    UEFIStringLower(message, nlmsg_data(nlh));
+    // UEFIStringLower(message, nlmsg_data(nlh));
+    UEFIFlexCall(message, nlmsg_data(nlh));
 
 
 

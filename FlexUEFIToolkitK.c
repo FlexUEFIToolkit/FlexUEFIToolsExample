@@ -11,7 +11,7 @@
 MODULE_LICENSE("MIT License");
 MODULE_AUTHOR("ColorsWind");
 
-#define MSG_SIZE 1052
+#define MSG_SIZE 5000
 struct sock *netlink_socket = NULL;
 static char message[MSG_SIZE];
 

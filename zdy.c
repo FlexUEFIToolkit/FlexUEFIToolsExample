@@ -14,8 +14,8 @@ struct msghdr msg, recv_msg;
 FILE* new_fw;
 static const size_t block_size = 4096;
 static const size_t block_count = 1024;
-static const size_t MAX_NL_PAYLOAD = 1052;
-static const size_t WRITE_CHUNK_SIZE = 1024;
+static const size_t MAX_NL_PAYLOAD = 5000;
+static const size_t WRITE_CHUNK_SIZE = 4096;
 
 int main()
 {
@@ -40,10 +40,10 @@ int main()
     memset(nlh, 0, NLMSG_SPACE(MAX_NL_PAYLOAD));
     nlh->nlmsg_len = NLMSG_SPACE(MAX_NL_PAYLOAD);
     nlh->nlmsg_pid = getpid();
-    nlh->nlmsg_flags = 0;   
+    nlh->nlmsg_flags = 0;
 
     FLEX_UEFI_TOOKLIT_FUNC_TYPE funcType = futChangeBIOS;
-    u_int64_t writeByte = 1024;
+    u_int64_t writeByte = WRITE_CHUNK_SIZE;
     char msgArg[MAX_NL_PAYLOAD];
 
 
@@ -54,7 +54,7 @@ int main()
             ((u_int64_t*)(msgArg+4))[0] = lba;
             ((u_int64_t*)(msgArg+4))[1] = offset;
             ((u_int64_t*)(msgArg+4))[2] = writeByte;
-            
+
             fread(msgArg + 28,
                   WRITE_CHUNK_SIZE,
                   1,
@@ -74,7 +74,10 @@ int main()
 
             recvmsg(sock_fd, &recv_msg, 0);
         }
-    }    
+        printf("\rWrite LBA: %4ld/%4ld", lba + 1, block_count);
+        fflush(stdout);
+    }
+    printf("\nWrite Done!\n");
 
     fclose(new_fw);
     close(sock_fd);

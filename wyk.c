@@ -6,14 +6,16 @@
 #include <linux/netlink.h>
 #include "FlexUEFIToolkitDxe.h"
 
-#define MAX_PAYLOAD 1024
 
-#define MAX_PAYLOAD 1024 /* maximum payload size*/
+static const size_t MAX_NL_PAYLOAD = 1052;
+
 struct sockaddr_nl src_addr, dest_addr;
 struct nlmsghdr *nlh = NULL;
 struct iovec iov;
 int sock_fd;
 struct msghdr msg;
+
+
 
 int main()
 {
@@ -32,13 +34,16 @@ int main()
     dest_addr.nl_pid = 0; /* For Linux Kernel */
     dest_addr.nl_groups = 0; /* unicast */
 
-    nlh = (struct nlmsghdr *)malloc(NLMSG_SPACE(MAX_PAYLOAD));
-    memset(nlh, 0, NLMSG_SPACE(MAX_PAYLOAD));
-    nlh->nlmsg_len = NLMSG_SPACE(MAX_PAYLOAD);
+    nlh = (struct nlmsghdr *)malloc(NLMSG_SPACE(MAX_NL_PAYLOAD));
+    memset(nlh, 0, NLMSG_SPACE(MAX_NL_PAYLOAD));
+    nlh->nlmsg_len = NLMSG_SPACE(MAX_NL_PAYLOAD);
     nlh->nlmsg_pid = getpid();
     nlh->nlmsg_flags = 0;
 
-    strcpy((char *)NLMSG_DATA(nlh), "Hello");
+    // zdy modify
+    FLEX_UEFI_TOOKLIT_FUNC_TYPE funcType = futToLowerCase;
+    ((u_int32_t*)NLMSG_DATA(nlh))[0] = (u_int32_t)funcType;
+    strcpy((char*)(NLMSG_DATA(nlh) + 28), "Hello");
 
     iov.iov_base = (void *)nlh;
     iov.iov_len = nlh->nlmsg_len;

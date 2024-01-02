@@ -11,7 +11,7 @@
 MODULE_LICENSE("MIT License");
 MODULE_AUTHOR("ColorsWind");
 
-#define MSG_SIZE 1024
+#define MSG_SIZE 5000
 struct sock *netlink_socket = NULL;
 static char message[MSG_SIZE];
 
@@ -27,7 +27,7 @@ static void receive_message(struct sk_buff *skb) {
         return;
     }
 
-    strncpy(message, NLMSG_DATA(nlh), MSG_SIZE);
+    memcpy(message, NLMSG_DATA(nlh), MSG_SIZE);
     pid = nlh->nlmsg_pid;
     pr_debug("%s : kernel message receive: %s.\n",__func__, message);
 
@@ -37,9 +37,9 @@ static void receive_message(struct sk_buff *skb) {
     }
 
     struct sk_buff *skb_out;
-    int msg_size = strnlen(message, MSG_SIZE);
+    // int msg_size = strnlen(message, MSG_SIZE);
 
-    skb_out = nlmsg_new(msg_size, 0);
+    skb_out = nlmsg_new(MSG_SIZE, 0);
     if (!skb_out) {
         pr_alert("%s : failed to allocate new skb.\n",__func__);
         return;
@@ -48,10 +48,11 @@ static void receive_message(struct sk_buff *skb) {
     NETLINK_CB(skb_out).dst_group = 0;
     NETLINK_CB(skb_out).portid = pid;
 
-    nlh = nlmsg_put(skb_out, pid, 0, NLMSG_DONE, msg_size, 0);
+    nlh = nlmsg_put(skb_out, pid, 0, NLMSG_DONE, MSG_SIZE, 0);
 
 
-    UEFIStringLower(message, nlmsg_data(nlh));
+    // UEFIStringLower(message, nlmsg_data(nlh));
+    UEFIFlexCall(message, nlmsg_data(nlh));
 
 
 

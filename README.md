@@ -2,7 +2,7 @@
 Kernel Module
 ```
 make
-sudo insmod FlexUEFIToolkitK.mod
+sudo insmod FlexUEFIToolkitK.ko
 sudo rmmod FlexUEFIToolkitK
 ```
 
